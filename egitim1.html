@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelime Bulma Oyunu</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .cell {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  .cell:hover {
+    background-color: #f0f0f0;
+  }
+  .found {
+    background-color: #90ee90;
+  }
+  #completeTraining {
+    display: none;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  #completeTraining:hover {
+    background-color: #45a049;
+  }
+  #skipTraining {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  #skipTraining:hover {
+    background-color: #ec971f;
+  }
+  .word-list {
+    margin-bottom: 20px;
+  }
+  #timer {
+    font-size: 1.5em;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div id="timer">Süre: <span id="time">30</span> saniye</div>
+
+<div class="word-list" id="wordList">
+  <!-- Bulunacak kelimeler burada listelenecek -->
+</div>
+
+<div id="grid" class="grid">
+  <!-- Kelime bulmaca hücreleri burada oluşturulacak -->
+</div>
+
+<button id="completeTraining">Eğitimi Tamamla</button>
+<button id="skipTraining">Eğitimi Atla</button>
+
+<script>
+  const gridElement = document.getElementById('grid');
+  const completeTrainingButton = document.getElementById('completeTraining');
+  const skipTrainingButton = document.getElementById('skipTraining');
+  const wordListElement = document.getElementById('wordList');
+  const timerElement = document.getElementById('time');
+  const allWords = ['elma', 'armut', 'muz', 'kalem', 'kitap', 'masa', 'sandalye', 'bilgisayar', 'telefon', 'pencere', 'kapı', 'çiçek', 'ağaç', 'bulut', 'gökyüzü'];
+  const wordsToFind = allWords.sort(() => 0.5 - Math.random()).slice(0, 5); // Rastgele 5 kelime seç
+  let foundWords = [];
+  let timeLeft = 30; // Süre 30 saniye olarak ayarlandı
+
+  // Bulunacak kelimeleri listele
+  wordsToFind.forEach(word => {
+    const wordElement = document.createElement('span');
+    wordElement.textContent = word + ' ';
+    wordListElement.appendChild(wordElement);
+  });
+
+  // Gridi oluştur
+  const cellElements = allWords.sort(() => 0.5 - Math.random()).map(word => { // Kelimeleri karıştır
+    const cell = document.createElement('div');
+    cell.textContent = word;
+    cell.classList.add('cell');
+    cell.onclick = () => checkWord(word, cell);
+    gridElement.appendChild(cell);
+    return cell;
+  });
+
+  function checkWord(word, cell) {
+    if (wordsToFind.includes(word) && !foundWords.includes(word)) {
+      foundWords.push(word);
+      cell.classList.add('found');
+      if (foundWords.length === wordsToFind.length) {
+        completeTrainingButton.style.display = 'block';
+        stopTimer();
+      }
+    }
+  }
+
+  let timer;
+  let halfTime = false;
+
+  function updateTimer() {
+    if (timeLeft > 0) {
+      timeLeft--;
+      timerElement.textContent = timeLeft;
+      if (timeLeft === 0) {
+        removeRandomWords();
+        timeLeft = 15; // Süreyi 15 saniyeye düşür
+        halfTime = true;
+      }
+    } else if (halfTime && timeLeft === 0) {
+      timeLeft = 15; // Süreyi yine 15 saniye olarak ayarla
+      removeRandomWords();
+    }
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+  }
+
+  function removeRandomWords() {
+    const wordsToRemove = allWords.filter(word => !wordsToFind.includes(word));
+    const randomWordsToRemove = wordsToRemove.sort(() => 0.5 - Math.random()).slice(0, 3); // Rastgele 3 kelime seç
+
+    cellElements.forEach(cell => {
+      if (randomWordsToRemove.includes(cell.textContent)) {
+        cell.style.visibility = 'hidden'; // Kelimeyi gizle
+      }
+    });
+  }
+
+  function skipTraining() {
+    removeRandomWords(); // Kelimeleri hemen sil
+    clearInterval(timer); // Mevcut timer'ı durdur
+    halfTime = false; // Yarı süreye düşürme olayını sıfırla
+    timeLeft = 30; // Süreyi tekrar 30 saniye olarak ayarla
+    timer = setInterval(updateTimer, 1000); // Timer'ı yeniden başlat
+  }
+
+  skipTrainingButton.addEventListener('click', skipTraining);
+
+  completeTrainingButton.addEventListener('click', () => {
+        window.location.href = 'egitimler.html';
+    });
+  // Timer başlat
+  timer = setInterval(updateTimer, 1000);
+
+</script>
+
+</body>
+</html>
