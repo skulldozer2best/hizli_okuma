@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelime Arama Egzersizi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            grid-gap: 10px; /* Kartlar arası boşluğu artırdım */
+            margin-bottom: 20px;
+        }
+        .letter {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: lightgrey;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+        .letter:hover {
+            background-color: #ddd;
+        }
+        .found {
+            background-color: lightgreen;
+            color: white;
+        }
+        #timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #complete {
+            display: none;
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        #start {
+            background-color: blue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        #word-list {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #difficulty, #grid-size {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        select {
+            margin-left: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">Süre: 60</div>
+    <div id="difficulty">
+        <label for="difficulty-select">Zorluk Seçimi:</label>
+        <select id="difficulty-select">
+            <option value="2">2 Kelime</option>
+            <option value="3">3 Kelime</option>
+            <option value="4">4 Kelime</option>
+            <option value="5">5 Kelime</option>
+        </select>
+    </div>
+    <div id="grid-size">
+        <label for="grid-size-select">Grid Boyutu:</label>
+        <select id="grid-size-select">
+            <option value="10">10x10</option>
+            <option value="15">15x15</option>
+        </select>
+    </div>
+    <div id="word-list"></div>
+    <div id="game"></div>
+    <button id="start">Egzersize Başla</button>
+    <button id="complete">Eğitimi Tamamla</button>
+
+    <script>
+        const wordList = ['KELIME', 'OYUN', 'TEST', 'JAVA', 'SCRIPT', 'PROGRAM', 'KOD', 'BILGISAYAR', 'MONITOR', 'KLAVYE', 'FARE', 'INTERNET', 'YAZILIM', 'DONANIM', 'VERITABANI'];
+        let rows = 10;
+        let cols = 10;
+        let grid = [];
+        let usedWords = [];
+        let selectedWords = [];
+        let time = 60;
+        let interval;
+
+        function initializeGrid() {
+            grid = [];
+            for (let i = 0; i < rows; i++) {
+                const row = [];
+                for (let j = 0; j < cols; j++) {
+                    row.push('');
+                }
+                grid.push(row);
+            }
+        }
+
+        function placeWord(word) {
+            const direction = Math.random() > 0.5 ? 'HORIZONTAL' : 'VERTICAL';
+            let placed = false;
+
+            while (!placed) {
+                const row = Math.floor(Math.random() * rows);
+                const col = Math.floor(Math.random() * cols);
+                if (direction === 'HORIZONTAL' && col + word.length <= cols) {
+                    let canPlace = true;
+                    for (let i = 0; i < word.length; i++) {
+                        if (grid[row][col + i] !== '') {
+                            canPlace = false;
+                            break;
+                        }
+                    }
+                    if (canPlace) {
+                        for (let i = 0; i < word.length; i++) {
+                            grid[row][col + i] = word[i];
+                        }
+                        usedWords.push(word.split('').map((char, index) => [row, col + index]));
+                        placed = true;
+                    }
+                } else if (direction === 'VERTICAL' && row + word.length <= rows) {
+                    let canPlace = true;
+                    for (let i = 0; i < word.length; i++) {
+                        if (grid[row + i][col] !== '') {
+                            canPlace = false;
+                            break;
+                        }
+                    }
+                    if (canPlace) {
+                        for (let i = 0; i < word.length; i++) {
+                            grid[row + i][col] = word[i];
+                        }
+                        usedWords.push(word.split('').map((char, index) => [row + index, col]));
+                        placed = true;
+                    }
+                }
+            }
+        }
+
+        function fillGrid() {
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (grid[i][j] === '') {
+                        const randomLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                        grid[i][j] = randomLetter;
+                    }
+                }
+            }
+        }
+
+        function renderGrid() {
+            const gameDiv = document.getElementById('game');
+            gameDiv.innerHTML = '';
+            gameDiv.style.gridTemplateColumns = `repeat(${cols}, 40px)`;
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const letterDiv = document.createElement('div');
+                    letterDiv.classList.add('letter');
+                    letterDiv.textContent = grid[i][j];
+                    letterDiv.dataset.row = i;
+                    letterDiv.dataset.col = j;
+                    letterDiv.addEventListener('click', checkWord);
+                    gameDiv.appendChild(letterDiv);
+                }
+            }
+        }
+
+        function renderWordList() {
+            const wordListDiv = document.getElementById('word-list');
+            wordListDiv.innerHTML = 'Bulunması gereken kelimeler: ' + selectedWords.join(', ');
+        }
+
+        function checkWord(event) {
+            const row = parseInt(event.target.dataset.row);
+            const col = parseInt(event.target.dataset.col);
+
+            usedWords.forEach(word => {
+                word.forEach(([wRow, wCol]) => {
+                    if (wRow === row && wCol === col) {
+                        word.forEach(([rw, rc]) => {
+                            document.querySelector(`[data-row="${rw}"][data-col="${rc}"]`).classList.add('found');
+                        });
+                        checkCompletion();
+                    }
+                });
+            });
+        }
+
+        function checkCompletion() {
+            const allWordsFound = usedWords.every(word => 
+                word.every(([row, col]) => 
+                    document.querySelector(`[data-row="${row}"][data-col="${col}"]`).classList.contains('found')
+                )
+            );
+            if (allWordsFound) {
+                document.getElementById('complete').style.display = 'block';
+                clearInterval(interval);
+            }
+        }
+
+        function startTimer() {
+            interval = setInterval(() => {
+                time--;
+                document.getElementById('timer').textContent = `Süre: ${time}`;
+                if (time === 0) {
+                    clearInterval(interval);
+                    removeRandomLetters();
+                    time = 30;
+                    startTimer();
+                }
+            }, 1000);
+        }
+
+        function removeRandomLetters() {
+            let count = 0;
+            while (count < 5) {
+                const row = Math.floor(Math.random() * rows);
+                const col = Math.floor(Math.random() * cols);
+                const letterDiv = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                if (letterDiv && !letterDiv.classList.contains('found') && letterDiv.textContent !== '') {
+                    letterDiv.textContent = '';
+                    count++;
+                }
+            }
+        }
+
+        function startGame() {
+            clearInterval(interval);
+            grid = [];
+            usedWords = [];
+            selectedWords = [];
+            time = 60;
+
+            const difficulty = parseInt(document.getElementById('difficulty-select').value);
+            for (let i = 0; i < difficulty; i++) {
+                const randomWord = wordList[Math.floor(Math.random() * wordList.length)];
+                if (!selectedWords.includes(randomWord)) {
+                    selectedWords.push(randomWord);
+                } else {
+                    i--;
+                }
+            }
+
+            const gridSize = parseInt(document.getElementById('grid-size-select').value);
+            rows = gridSize;
+            cols = gridSize;
+
+            initializeGrid();
+            selectedWords.forEach(word => placeWord(word));
+            fillGrid();
+            renderGrid();
+            renderWordList();
+            startTimer();
+            document.getElementById('complete').style.display = 'none';
+            document.getElementById('start').style.display = 'none';
+            document.getElementById('difficulty').style.display = 'none';
+            document.getElementById('grid-size').style.display = 'none';
+        }
+
+        document.getElementById('start').addEventListener('click', startGame);
+        document.getElementById('complete').addEventListener('click', () => {
+            window.location.href = 'egitimler.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+#start-screen, #game {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+#finish {
+    margin-top: 20px;
+    font-size: 18px;
+    padding: 15px 30px;
+}
+
+#timer {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+#shuffled-word-container, #hint-container {
+    margin-bottom: 20px;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+#answer {
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
