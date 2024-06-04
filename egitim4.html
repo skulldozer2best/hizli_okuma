@@ -92,8 +92,8 @@
 <body>
     <div class="container">
         <h1>Hafıza Kartları Egzersizi</h1>
+        <div id="currentWord">Bu kelimeyi bul: </div>
         <button id="startButton">Başla</button>
-        <div id="currentWord"></div>
         <div id="timer"></div>
         <div id="gameBoard" class="game-board">
             <!-- Kartlar burada gösterilecek -->
@@ -114,6 +114,7 @@
         let timerInterval;
         let currentWordIndex = 0;
         let correctGuesses = 0;
+        let wordsToFind = [];
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -125,10 +126,10 @@
 
         function startGame() {
             correctGuesses = 0;
-
             document.getElementById('startButton').classList.add('hidden');
 
             shuffledWords = shuffle(words); // Shuffle words
+            wordsToFind = shuffle([...shuffledWords]); // Shuffle the words to find
             currentWordIndex = 0;
             const gameBoard = document.getElementById('gameBoard');
             gameBoard.innerHTML = ''; // Clear the board
@@ -142,6 +143,9 @@
                 gameBoard.appendChild(card);
             });
 
+            // Display the first word to find
+            displayNextWord();
+
             // Flip the cards after the memorization time
             setTimeout(() => {
                 document.querySelectorAll('.card').forEach(card => {
@@ -152,7 +156,6 @@
                     card.addEventListener('click', checkCard);
                 });
                 document.getElementById('completeButton').style.display = 'none';
-                displayNextWord();
                 startTimer();
             }, flipTime);
         }
@@ -183,11 +186,11 @@
         }
 
         function displayNextWord() {
-            if (currentWordIndex >= shuffledWords.length) {
+            if (currentWordIndex >= wordsToFind.length) {
                 endGame();
                 return;
             }
-            document.getElementById('currentWord').innerText = `Bu kelimeyi bul: ${shuffledWords[currentWordIndex]}`;
+            document.getElementById('currentWord').innerText = `Bu kelimeyi bul: ${wordsToFind[currentWordIndex]}`;
         }
 
         function checkCard(event) {
@@ -197,12 +200,12 @@
             }
             selectedCard.classList.remove('flipped');
             selectedCard.innerText = selectedCard.dataset.word;
-            if (selectedCard.dataset.word === shuffledWords[currentWordIndex]) {
+            if (selectedCard.dataset.word === wordsToFind[currentWordIndex]) {
                 alert('Doğru!');
                 selectedCard.classList.add('correct');
                 correctGuesses++;
                 currentWordIndex++;
-                if (currentWordIndex >= shuffledWords.length) {
+                if (currentWordIndex >= wordsToFind.length) {
                     endGame();
                 } else {
                     setTimeout(() => {
