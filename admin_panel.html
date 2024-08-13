@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Paneli</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .game-section {
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        button {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Paneli</h1>
+        <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+
+        <div class="game-section">
+            <h2>Kelime Bulma Oyunu</h2>
+            <h3>Kelime Haznesi</h3>
+            <textarea id="wordList">Kasa, Şövalye, Partikül, Sadrazam, Uçak, Karavan, Parçalar, Ücretsiz, Kartel, Gemi, Korsan, Karton, Kutu, Karamel, Gökyüzü, Kartezyen, Konjüktör, İnovasyon, Parşömen, Açıklık</textarea>
+            <button onclick="saveWordList()">Kelime Listesini Kaydet</button>
+
+            <h3>Oyun Kodu</h3>
+            <textarea id="gameCode">
+
+            </textarea>
+            <button onclick="saveGameCode()">Oyun Kodunu Kaydet</button>
+        </div>
+
+        <!-- Diğer oyunlar için benzer bölümler eklenebilir -->
+
+    </div>
+
+    <script>
+        function saveWordList() {
+            const wordList = document.getElementById('wordList').value;
+            // Burada kelime listesini kaydetmek için bir AJAX isteği yapılabilir
+            console.log('Kelime listesi kaydedildi:', wordList);
+            alert('Kelime listesi kaydedildi!');
+        }
+
+        function saveGameCode() {
+            const gameCode = document.getElementById('gameCode').value;
+            // Burada oyun kodunu kaydetmek için bir AJAX isteği yapılabilir
+            console.log('Oyun kodu kaydedildi:', gameCode);
+            alert('Oyun kodu kaydedildi!');
+        }
+
+        function logout() {
+            // Çıkış işlemleri burada yapılabilir
+            window.location.href = 'unlocked.html'; // Ana sayfaya yönlendir
+        }
+    </script>
+</body>
+</html>

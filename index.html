@@ -1,19 +1,116 @@
-<html>
-  <head>
-    <body>
-      <link rel="stylesheet" href="style.css">
-      <div class="top-sections">
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-sections {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .section {
+            width: 33.33%;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .label {
+            position: relative;
+            z-index: 1;
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            z-index: -2;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+            border-radius: 25px;
+            z-index: -1;
+        }
+
+        .button:hover::before {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-sections">
         <div class="section">
-          <a href="giris-yap.html" class="button">
-            <span class="label">Giriş Yap</span>
-          </a>
+            <a href="giris-yap.html" class="button">
+                <span class="label">Giriş Yap</span>
+            </a>
         </div>
         <div class="section">
-          <a href="index.html" class="button">
-            <span class="label">Ana Sayfa</span>
-          </a>
+            <a href="index.html" class="button">
+                <span class="label">Ana Sayfa</span>
+            </a>
         </div>
-      </div>
-    </body>
-  </head>
+    </div>
+</body>
 </html>

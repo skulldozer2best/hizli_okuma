@@ -1,20 +1,221 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="unlockedc.css">
-  </head>
-  <body>
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .menu-container {
+            display: flex;
+            align-items: center;
+        }
+        .section {
+            margin: 0 10px;
+        }
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 25px;
+            margin-right: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .button:active {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(0);
+        }
+        .label {
+            font-weight: 600;
+        }
+        .welcome-message {
+            text-align: right;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .welcome-message h3 {
+            margin: 0;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 25px;
+        }
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .username {
+            font-size: 18px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .admin-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .modal button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
     <div class="nav">
-      <div class="section">
-        <a href="egitimler.html" class="button">
-          <span class="label">Eğitimler</span>
-        </a>
-        <a href="unlocked.html" class="button">
-          <span class="label">Ana Sayfa</span>
-        </a>
-      </div>
-      <div class="welcome-message">
-        <h2>Hoşgeldin Gökçe!</h2>
-      </div>
+        <div class="menu-container">
+            <div class="section">
+                <a href="antrenmanlar.html" class="button">
+                    <span class="label">Antrenmanlar</span>
+                </a>
+                <a href="egitimler.html" class="button">
+                    <span class="label">Eğitimler</span>
+                </a>
+                <a href="unlocked.html" class="button">
+                    <span class="label">Ana Sayfa</span>
+                </a>
+            </div>
+        </div>
+        <div class="user-info">
+            <img src="profil_fotografi.png" alt="Profile Picture" class="profile-picture">
+            <span class="username">Gökçe</span>
+        </div>
     </div>
-  </body>
+    <div class="welcome-message">
+        <h3>Hoşgeldin Gökçe!</h3>
+    </div>
+    
+    <button class="button admin-button" id="adminBtn">Admin Paneli</button>
+
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Admin Girişi</h2>
+            <input type="text" id="adminUsername" placeholder="Kullanıcı Adı">
+            <input type="password" id="adminPassword" placeholder="Şifre">
+            <button id="adminLoginBtn">Giriş</button>
+        </div>
+    </div>
+
+    <script>
+        var modal = document.getElementById("adminModal");
+        var btn = document.getElementById("adminBtn");
+        var span = document.getElementsByClassName("close")[0];
+        var loginBtn = document.getElementById("adminLoginBtn");
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        loginBtn.onclick = function() {
+            var username = document.getElementById("adminUsername").value;
+            var password = document.getElementById("adminPassword").value;
+
+            if (username === "gokce" && password === "gokce123") {
+                alert("Admin paneline yönlendiriliyorsunuz.");
+                window.location.href = "admin_panel.html"; // Admin panel sayfasına yönlendir
+            } else {
+                alert("Kullanıcı adı veya şifre yanlış!");
+            }
+        }
+    </script>
+</body>
 </html>

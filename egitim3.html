@@ -1,10 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+            body {
+                font-family: 'Montserrat', sans-serif;
+                background: linear-gradient(to right, #fc5c7d, #6a82fb);
+                color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+            }
+
+            .container {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+                backdrop-filter: blur(4px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                max-width: 600px;
+                width: 100%;
+                text-align: center;
+            }
+
+            #shuffled-word-container, #hint-container {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+                padding: 15px;
+                margin-bottom: 20px;
+                font-size: 24px;
+            }
+
+            #answer {
+                background: rgba(255, 255, 255, 0.2);
+                border: none;
+                border-radius: 25px;
+                color: #fff;
+                padding: 15px;
+                font-size: 18px;
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            button {
+                background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+                border: none;
+                border-radius: 25px;
+                color: #333;
+                font-weight: bold;
+                padding: 12px 24px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin: 10px;
+            }
+
+            button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            }
+
+            #finish {
+                margin-top: 20px;
+                font-size: 18px;
+                padding: 15px 30px;
+            }
+
+            #timer {
+                margin-bottom: 20px;
+                font-size: 18px;
+            }
+
+            #shuffled-word-container, #hint-container {
+                margin-bottom: 20px;
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+
+            #answer {
+                padding: 10px;
+                margin-bottom: 10px;
+                font-size: 18px;
+            }
+            
+
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelime Eğitim</title>
-    <link rel="stylesheet" href="egitim3.css">
 </head>
 <body>
     <div id="start-screen">
@@ -25,6 +112,102 @@
         <div id="result"></div>
     </div>
     <button id="finish" style="display:none;">Eğitimi Tamamla</button>
-    <script src="egitim3.js"></script>
+    <script>const words = ["anlam", "bilgi", "ders", "kod", "tarif", "kitap", "defter", "bilgisayar", "kalem", "mouse", "araba", "eğitim", "eğim", "fıstık", "kodlama"];
+        let currentWord = "";
+        let wordIndex = 0;
+        let correctAnswers = 0;
+        let selectedWords = [];
+        let timer;
+        let timeLeft = 60;
+        let difficulty = 5;
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("start-game").addEventListener("click", startGame);
+            document.getElementById("submit-answer").addEventListener("click", checkAnswer);
+            document.getElementById("skip").addEventListener("click", giveHint);
+            document.getElementById("finish").addEventListener("click", () => {
+                window.location.href = "egitimler.html";
+            });
+        });
+        
+        function startGame() {
+            difficulty = parseInt(document.getElementById("difficulty").value, 10);
+            selectedWords = getRandomWords(words, difficulty);
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("game").style.display = "block";
+            timeLeft = 60;
+            startTimer();
+            nextWord();
+        }
+        
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById("time").innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endGame();
+                }
+            }, 1000);
+        }
+        
+        function getRandomWords(wordArray, count) {
+            const shuffled = wordArray.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        function nextWord() {
+            if (wordIndex < selectedWords.length) {
+                currentWord = selectedWords[wordIndex];
+                const shuffledWord = shuffleWord(currentWord);
+                document.getElementById("shuffled-word-container").innerText = shuffledWord;
+                document.getElementById("hint-word").innerText = "_ ".repeat(currentWord.length).trim();
+                document.getElementById("answer").value = "";
+                document.getElementById("result").innerText = "";
+            } else {
+                endGame();
+            }
+        }
+        
+        function checkAnswer() {
+            const answer = document.getElementById("answer").value;
+            if (answer.toLowerCase() === currentWord) {
+                correctAnswers++;
+                wordIndex++;
+                nextWord();
+            } else {
+                document.getElementById("result").innerText = "Yanlış, tekrar deneyin!";
+            }
+        }
+        
+        function giveHint() {
+            const currentWordArray = currentWord.split('');
+            const currentHintArray = document.getElementById("hint-word").innerText.split(' ');
+            let availableIndices = [];
+        
+            currentHintArray.forEach((char, index) => {
+                if (char === "_") {
+                    availableIndices.push(index);
+                }
+            });
+        
+            if (availableIndices.length > 0) {
+                const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+                currentHintArray[randomIndex] = currentWordArray[randomIndex];
+                document.getElementById("hint-word").innerText = currentHintArray.join(' ');
+            }
+        }
+        
+        function shuffleWord(word) {
+            const shuffled = word.split('').sort(() => 0.5 - Math.random()).join('');
+            return shuffled !== word ? shuffled : shuffleWord(word);
+        }
+        
+        function endGame() {
+            clearInterval(timer);
+            document.getElementById("finish").style.display = "block";
+            document.getElementById("game").style.display = "none";
+        }
+        </script>
 </body>
 </html>

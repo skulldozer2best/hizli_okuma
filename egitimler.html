@@ -1,39 +1,314 @@
 <html>
   <head>
-    <link rel="stylesheet" href="egitimler.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+        
+        /* Navigation Styles */
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section {
+            margin: 0 10px;
+        }
+        
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            color: #333;
+            background-color: #fff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .button:hover {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border-color: #333;
+            color: #333;
+        }
+        
+        .button:active {
+            background-color: #e0e0e0;
+            border-color: #333;
+            color: #333;
+        }
+
+        .menu-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .label {
+            text-align: center;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        
+        /* Welcome Message Styles */
+        
+        .welcome-message {
+            text-align: right;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-message h2 {
+            margin: 0;
+        }
+        
+        /* Button Container Styles */
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .button-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .button-wrapper.button {
+            margin-bottom: 20px;
+        }
+        
+        .button-wrapper.button:not(:last-child) {
+            margin-right: 20px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .training-box {
+            background: linear-gradient(45deg, #00f260, #0575e6);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px;
+            width: 200px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .training-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6), 0 0 10px rgba(255, 255, 255, 0.6);
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+        }
+
+        .training-box a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .training-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .description {
+            padding: 10px;
+            text-align: center;
+        }
+        .username {
+            font-size: 18px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 25px;
+        }
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
   </head>
   <body>
     <div class="nav">
-      <div class="section">
-        <a href="unlocked.html" class="button">
+        <div class="section">
+            <div class="menu-container"></div>
+            <a href="unlocked.html" class="button">
           <span class="label">Ana Sayfa</span>
         </a>
         <a href="egitimler.html" class="button">
           <span class="label">Eğitimler</span>
         </a>
+        <a href="antrenmanlar.html" class="button">
+          <span class="label">Antrenmanlar</span>
+      </a>
       </div>
-      <div class="welcome-message">
-        <h2>Hoşgeldin Gökçe!</h2>
-      </div>
+      <div class="user-info">
+            <img src="profil_fotografi.png" alt="Profile Picture" class="profile-picture">
+            <span class="username">Gökçe</span>
+        </div>
     </div>
-    <div class="button-container">
-      <div class="button-wrapper">
-        <a href="egitim1.html" class="button">
-          <span class="label">Göz Eğitimi(etkileşimli)</span>
-        </a>
-        <a href="egitim2.html" class="button">
-          <span class="label">Eğitim 2</span>
-        </a>
-        <a href="egitim3.html" class="button">
-          <span class="label">Eğitim 3</span>
-        </a>
-        <a href="egitim4.html" class="button">
-          <span class="label">Eğitim 4</span>
-        </a>
-        <a href="egitim5.html" class="button">
-          <span class="label">Eğitim 5</span>
-        </a>
+    <div class="welcome-message">
+        <h3>Hoşgeldin Gökçe!</h3>
+    </div>
+    </div>
+    <div class="container">
+      <!-- Antrenman Konteynırı 1 -->
+      <div class="training-box">
+          <a href="egitim1.html">
+              <img src="egitim1.png" alt="Training 1" class="training-image">
+              <div class="description">
+                  <p>Verilen kelimeleri kartlar üzerinde bularak ilerleyin.</p>
+              </div>
+          </a>
       </div>
+      <!-- Antrenman Konteynırı 2 -->
+      <div class="training-box">
+          <a href="egitim2.html">
+              <img src="egitim2.png" alt="Training 2" class="training-image">
+              <div class="description">
+                  <p>Verilen kelimeleri karışık harfler arasında arayın ve bulun.</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 3 -->
+      <div class="training-box">
+          <a href="egitim3.html">
+              <img src="egitim3.png" alt="Training 3" class="training-image">
+              <div class="description">
+                  <p>Karışık olarak verilen kelimelerin düzgün halini bularak yazın.</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 4 -->
+      <div class="training-box">
+          <a href="egitim4.html">
+              <img src="egitim4.png" alt="Training 4" class="training-image">
+              <div class="description">
+                  <p>Verilen kartlarda aynı olan kartları bularak hafıza antrenmanı yapın.</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 5 -->
+      <div class="training-box">
+          <a href="egitim5.html">
+              <img src="egitim5.jpg" alt="Training 5" class="training-image">
+              <div class="description">
+                  <p>Metin içinde verilen kelimeleri arayın.</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 6 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training6.jpg" alt="Training 6" class="training-image">
+              <div class="description">
+                  <p>Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 7 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training7.jpg" alt="Training 7" class="training-image">
+              <div class="description">
+                  <p>Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 8 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training8.jpg" alt="Training 8" class="training-image">
+              <div class="description">
+                  <p>Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 9 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training9.jpg" alt="Training 9" class="training-image">
+              <div class="description">
+                  <p>Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 10 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training10.jpg" alt="Training 10" class="training-image">
+              <div class="description">
+                  <p>10. Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 11 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training10.jpg" alt="Training 10" class="training-image">
+              <div class="description">
+                  <p>11. Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 12 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training10.jpg" alt="Training 10" class="training-image">
+              <div class="description">
+                  <p>12. Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 13 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training10.jpg" alt="Training 10" class="training-image">
+              <div class="description">
+                  <p>13. Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+      <!-- Antrenman Konteynırı 14 -->
+      <div class="training-box">
+          <a href="antrenman1.html">
+              <img src="training10.jpg" alt="Training 10" class="training-image">
+              <div class="description">
+                  <p>14. Antrenman Açıklaması</p>
+              </div>
+          </a>
+      </div>
+  </div>
     </div>
   </body>
 </html>

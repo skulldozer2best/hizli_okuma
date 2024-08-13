@@ -5,81 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelime Arama Egzersizi</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        #game {
-            display: grid;
-            grid-template-columns: repeat(10, 40px);
-            grid-gap: 10px; 
-            margin-bottom: 20px;
-        }
-        .letter {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: lightgrey;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            font-weight: bold;
-            color: #333;
-            transition: background-color 0.3s;
-        }
-        .letter:hover {
-            background-color: #ddd;
-        }
-        .found {
-            background-color: lightgreen;
-            color: white;
-        }
-        #timer {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        #complete {
-            display: none;
-            background-color: green;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-        #start {
-            background-color: blue;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-        #word-list {
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        #difficulty, #grid-size {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        select {
-            margin-left: 10px;
-            padding: 5px;
-            font-size: 16px;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+            body {
+                font-family: 'Roboto', sans-serif;
+                background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+                color: #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+            }
+
+            .container {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 15px;
+                padding: 30px;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+                backdrop-filter: blur(4px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                max-width: 800px;
+                width: 100%;
+                text-align: center;
+            }
+
+            #game {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .letter {
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+
+            .letter:hover {
+                transform: scale(1.1);
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            }
+
+            button {
+                background: linear-gradient(45deg, #5ee7df 0%, #b490ca 100%);
+                border: none;
+                border-radius: 25px;
+                color: white;
+                font-weight: bold;
+                padding: 12px 24px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: 20px;
+            }
+
+            .found {
+                background-color: lightgreen;
+                color: white;
+            }
+
+            #timer {
+                font-size: 24px;
+                margin-top: -500px;
+            }
+
+            #complete {
+                display: none;
+                background-color: green;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                cursor: pointer;
+                font-size: 16px;
+                margin-top: 20px;
+            }
+
+            #start {
+                background-color: blue;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                cursor: pointer;
+                font-size: 16px;
+                margin-top: 20px;
+            }
+
+            #word-list {
+                margin-bottom: 20px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            #difficulty,
+            #grid-size {
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            select {
+                margin-left: 10px;
+                padding: 5px;
+                font-size: 16px;
+            }
     </style>
 </head>
 <body>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metin Arama Egzersizi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .game-container.active {
+            transform: translateY(-20px);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .text-container {
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .text-container span {
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .text-container span:hover {
+            background-color: #f0f0f0;
+        }
+
+        .text-container span.correct {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        .options, .counter, .timer {
+            margin-bottom: 20px;
+        }
+
+        .options select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+        .counter, .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .start-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-button:active {
+            transform: translateY(1px);
+        }
+
+        .start-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover::after {
+            left: 100%;
+            top: 100%;
+        }
+
+        .start-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #target-word {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .game-info {
+            display: block;
+        }
+
+        .game-content {
+            display: none;
+        
+            .options select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+        }
+
+        .options select::-ms-expand {
+            display: none;
+        }
+
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .select-wrapper::after {
+            content: '\25BC';
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .options select option {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .options select:focus option {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes dropDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        }
+        .options select:focus option:nth-child(1) { animation: dropDown 0.3s ease forwards 0.1s; }
+        .options select:focus option:nth-child(2) { animation: dropDown 0.3s ease forwards 0.2s; }
+        .options select:focus option:nth-child(3) { animation: dropDown 0.3s ease forwards 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <h1>Metin Arama Egzersizi</h1>
+        <div class="game-info" id="gameInfo">
+            <div class="options">
+                <div class="timer-selector">
+                    <label for="time">Süre:</label>
+                    <div class="select-wrapper">
+                        <select id="time">
+                            <option value="60">1 Dakika</option>
+                            <option value="120">2 Dakika</option>
+                            <option value="180">3 Dakika</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="word-count-selector">
+                    <label for="word-count">Bulunması Gereken Kelime Sayısı:</label>
+                    <div class="select-wrapper">
+                        <select id="word-count">
+                            <option value="5">5 Kelime</option>
+                            <option value="10">10 Kelime</option>
+                            <option value="15">15 Kelime</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="start-button" onclick="startGame()">Egzersize Başla</button>
+            </div>
+        </div>
+        <div class="game-content" id="gameContent">
+            <h2>Bulunması Gereken Kelime: <span id="target-word"></span></h2>
+            <div class="counter">Bulunan Kelimeler: <span id="found-counter">0</span></div>
+            <div class="text-container" id="text-container"></div>
+            <div class="timer">Kalan Süre: <span id="timer">00:00</span></div>
+        </div>
+    </div>
+
+    <script>
+        const texts = [
+            "Sanat, insanlık tarihi boyunca önemli bir ifade biçimi olmuştur. Resim, heykel, müzik ve edebiyat gibi çeşitli dalları, insanların duygularını, düşüncelerini ve hayallerini yansıtmak için kullanılmıştır. Sanat eserleri, geçmişten günümüze kültürel mirasın bir parçası olarak kalmış ve toplumların kimliklerini şekillendirmiştir.",
+            "Eğitim, bireylerin bilgi ve beceri kazanmaları için önemli bir araçtır. Okullar ve üniversiteler, öğrencilerin akademik ve sosyal gelişimlerine katkıda bulunur. Eğitimin önemi, sadece bireyler için değil, toplumun genel refahı ve ilerlemesi için de büyüktür. Kaliteli eğitim, ekonomik ve sosyal kalkınmanın temelidir.",
+            "Teknoloji, günlük yaşamımızı önemli ölçüde değiştirmiştir. Bilgisayarlar, akıllı telefonlar ve internet, bilgiye erişimi kolaylaştırmış ve iletişimi hızlandırmıştır. Teknolojinin hızlı gelişimi, iş dünyasında da büyük değişikliklere yol açmış ve birçok yeni meslek dalının ortaya çıkmasına neden olmuştur. Ancak, bu hızlı değişim, aynı zamanda bazı zorlukları da beraberinde getirmiştir.",
+            "Çevre kirliliği, günümüzde karşılaşılan en büyük sorunlardan biridir. Hava, su ve toprak kirliliği, doğal yaşamı ve insan sağlığını tehdit etmektedir. Sanayi faaliyetleri, tarım ilaçları ve atıklar, çevre kirliliğinin başlıca nedenleridir. Çevrenin korunması için bireylerin ve toplumların bilinçlenmesi ve gerekli önlemleri alması gerekmektedir.",
+            "Spor, sağlıklı yaşamın ve fiziksel aktivitenin önemli bir parçasıdır. Futbol, basketbol, yüzme gibi spor dalları, hem bireysel hem de takım halinde yapılabilir. Spor yapmak, vücut sağlığını korumanın yanı sıra, disiplin ve takım çalışması becerilerini de geliştirir. Düzenli spor yapmanın, stresi azaltma ve ruh sağlığını iyileştirme üzerinde olumlu etkileri olduğu bilinmektedir."
+        ];
+
+        const textContainer = document.getElementById('text-container');
+        const targetWordDisplay = document.getElementById('target-word');
+        const foundCounterDisplay = document.getElementById('found-counter');
+        const timerDisplay = document.getElementById('timer');
+        const startButton = document.querySelector('.start-button');
+        const gameInfo = document.getElementById('gameInfo');
+        const gameContent = document.getElementById('gameContent');
+        const gameContainer = document.getElementById('gameContainer');
+        let words = [];
+        let targetWord = '';
+        let foundCounter = 0;
+        let timer;
+        let timeRemaining = 0;
+        let textIndex = 0;
+        let totalWordsToFind = 0;
+        let wordsFound = 0;
+
+        function loadText() {
+            textContainer.style.display = 'block';
+            textContainer.innerHTML = '';
+            foundCounter = 0;
+            wordsFound = 0;
+            foundCounterDisplay.textContent = foundCounter;
+
+            const selectedText = texts[textIndex];
+            words = selectedText.split(' ');
+
+            words.forEach(word => {
+                const span = document.createElement('span');
+                span.textContent = word + ' ';
+                span.addEventListener('click', handleWordClick);
+                textContainer.appendChild(span);
+            });
+
+            selectRandomWord();
+        }
+
+        function selectRandomWord() {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            targetWord = words[randomIndex].replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '');
+            targetWordDisplay.textContent = targetWord;
+        }
+
+        function handleWordClick(event) {
+            const selectedWord = event.target.textContent.trim().replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '');
+            if (selectedWord === targetWord) {
+                event.target.classList.add('correct');
+                foundCounter++;
+                foundCounterDisplay.textContent = foundCounter;
+                wordsFound++;
+                if (wordsFound >= totalWordsToFind) {
+                    textIndex++;
+                    if (textIndex >= texts.length) {
+                        alert('Tüm metinleri tamamladınız! Oyun bitti.');
+                        clearInterval(timer);
+                        startButton.disabled = false;
+                        gameInfo.style.display = 'block';
+                        gameContent.style.display = 'none';
+                        return;
+                    } else {
+                        loadText();
+                    }
+                } else {
+                    selectRandomWord();
+                }
+            }
+        }
+
+        function startGame() {
+            startButton.disabled = true;
+            gameInfo.style.display = 'none';
+            gameContent.style.display = 'block';
+            gameContainer.classList.add('active');
+            timeRemaining = parseInt(document.getElementById('time').value);
+            totalWordsToFind = parseInt(document.getElementById('word-count').value);
+            loadText();
+            timer = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                alert('Süre doldu! Oyun bitti.');
+                startButton.disabled = false;
+                gameInfo.style.display = 'block';
+                gameContent.style.display = 'none';
+                gameContainer.classList.remove('active');
+                return;
+            }
+
+            timeRemaining--;
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+    </script>
+</body>
+</html>

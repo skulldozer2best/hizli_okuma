@@ -1,20 +1,244 @@
 <!DOCTYPE html>
-<html lang="tr">
-    <head>
-        <title>Hafıza Kartı Eğitimi</title>
-        <link rel="stylesheet" href="egitim4.css">
-        <script src="egitim4.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="UTF-8">
-    </head>
-    <body>
-        <div class="game-container">
-            <h1>Hafıza Kartı Eğitimi</h1>
-            <p>Let's play!</p>
-            <button id="start-game">Başla</button>
-            <button id="new-game">Yeni Oyun</button>
-            <button id="reset-game">Sıfırla</button>
-            <!-- Game board will go here -->
-          </div>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hafıza Oyunu</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .card {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.hidden {
+            background: linear-gradient(45deg, #a8edea 0%, #fed6e3 100%);
+            transform: scale(0.95);
+            color: transparent;
+        }
+
+        .card.matched {
+            background: linear-gradient(45deg, #00f260, #0575e6);
+            color: #fff;
+            cursor: default;
+        }
+
+        .grid {
+            display: grid;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-selector, .start-button {
+            margin-bottom: 20px;
+        }
+
+        .difficulty-selector select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .start-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            color: #333;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-button:disabled {
+            background: #aaa;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="difficulty-selector">
+            <label for="difficulty">Zorluk Seviyesi:</label>
+            <select id="difficulty">
+                <option value="10">10 Kart</option>
+                <option value="20">20 Kart</option>
+                <option value="40">40 Kart</option>
+            </select>
+        </div>
+        <button class="start-button">Oyunu Başlat</button>
+        <div class="grid" id="game-board"></div>
+    </div>
+
+    <script>
+        const words = ["elma", "armut", "muz", "çilek", "kiraz", "karpuz", "kavun", "üzüm", "şeftali", "kayısı"];
+        let gameBoard = document.getElementById('game-board');
+        let startButton = document.querySelector('.start-button');
+        let difficultySelector = document.getElementById('difficulty');
+        let cards = [];
+        let cardValues = [];
+        let matchedCards = 0;
+        let firstCard, secondCard;
+        let lockBoard = false;
+        let usedWords = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function createBoard(cardCount) {
+            gameBoard.innerHTML = '';
+            cards = [];
+            cardValues = [];
+            matchedCards = 0;
+            usedWords = [];
+
+            let selectedWords = shuffle(words.slice(0, cardCount / 2));
+            selectedWords = [...selectedWords, ...selectedWords];
+            selectedWords = shuffle(selectedWords);
+
+            for (let i = 0; i < cardCount; i++) {
+                let card = document.createElement('div');
+                card.classList.add('card', 'hidden');
+                card.dataset.value = selectedWords[i];
+                card.addEventListener('click', handleCardClick);
+                cards.push(card);
+                cardValues.push(selectedWords[i]);
+                gameBoard.appendChild(card);
+            }
+
+            if (cardCount === 40) {
+                gameBoard.style.gridTemplateColumns = `repeat(8, 1fr)`;
+            } else {
+                gameBoard.style.gridTemplateColumns = `repeat(5, 1fr)`;
+            }
+
+            setTimeout(() => {
+                cards.forEach(card => card.classList.add('hidden'));
+            }, 2000);
+        }
+
+        function handleCardClick() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+
+            this.classList.remove('hidden');
+            this.textContent = this.dataset.value;
+
+            if (!firstCard) {
+                firstCard = this;
+                return;
+            }
+
+            secondCard = this;
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            let isMatch = firstCard.dataset.value === secondCard.dataset.value;
+
+            isMatch ? disableCards() : unflipCards();
+        }
+
+        function disableCards() {
+            firstCard.removeEventListener('click', handleCardClick);
+            secondCard.removeEventListener('click', handleCardClick);
+
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+
+            resetBoard();
+            matchedCards += 2;
+            usedWords.push(firstCard.dataset.value);
+
+            if (matchedCards === cards.length) {
+                setTimeout(() => alert('Tebrikler! Tüm kartları buldunuz!'), 500);
+                startButton.disabled = false;
+            }
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+
+            setTimeout(() => {
+                firstCard.classList.add('hidden');
+                secondCard.classList.add('hidden');
+                firstCard.textContent = '';
+                secondCard.textContent = '';
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [firstCard, secondCard] = [null, null];
+            lockBoard = false;
+        }
+
+        startButton.addEventListener('click', () => {
+            const cardCount = parseInt(difficultySelector.value);
+            createBoard(cardCount);
+            startButton.disabled = true;
+        });
+    </script>
+</body>
 </html>

@@ -5,98 +5,129 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kelime Bulma Egzersizi</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
   body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
   }
+
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    max-width: 800px;
+    width: 100%;
+  }
+
   .grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
     margin-bottom: 20px;
   }
+
   .cell {
-    width: 100px;
-    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #ddd;
-    background-color: white;
+    font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
-    user-select: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+
   .cell:hover {
-    background-color: #f0f0f0;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
+
   .found {
-    background-color: #90ee90;
-  }
-  #completeTraining {
-    display: none;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    cursor: pointer;
-    background-color: #4CAF50;
+    background: linear-gradient(45deg, #00f260, #0575e6);
     color: white;
+    pointer-events: none;
+  }
+
+  button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background: linear-gradient(45deg, #ff6b6b, #feca57);
+    color: #fff;
     border: none;
-    border-radius: 5px;
-    margin-top: 20px;
-  }
-  #completeTraining:hover {
-    background-color: #45a049;
-  }
-  #skipTraining, #startGame {
-    padding: 10px 20px;
-    font-size: 1.2em;
+    border-radius: 50px;
     cursor: pointer;
-    background-color: #f0ad4e;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    outline: none;
+    position: relative;
+    overflow: hidden;
+   }
+
+  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   }
-  #skipTraining:hover {
-    background-color: #ec971f;
+
+  #timer {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
   }
-  #startGame {
-    background-color: #5bc0de;
-  }
-  #startGame:hover {
-    background-color: #31b0d5;
-  }
+
   .word-list {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  .difficulty-selection {
+    display: flex;
+    justify-content: center;
     margin-bottom: 20px;
   }
-  #timer {
-    font-size: 1.5em;
-    color: #d9534f;
+  .difficulty-button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
   }
 </style>
 </head>
 <body>
+<div class="container">
+  <div id="timer">Süre: <span id="time">30</span> saniye</div>
 
-<div id="timer">Süre: <span id="time">30</span> saniye</div>
+  <div class="difficulty-selection" id="difficultySelection">
+    <button class="difficulty-button" data-difficulty="10">Kolay (10 kart)</button>
+    <button class="difficulty-button" data-difficulty="20">Orta (20 kart)</button>
+    <button class="difficulty-button" data-difficulty="40">Zor (40 kart)</button>
+  </div>
 
-<div class="word-list" id="wordList">
-  <!-- Bulunacak kelimeler burada listelenecek -->
+  <div class="word-list" id="wordList">
+    <!-- Bulunacak kelimeler burada listelenecek -->
+  </div>
+
+  <div id="grid" class="grid">
+    <!-- Kelime bulmaca hücreleri burada oluşturulacak -->
+  </div>
+
+  <button id="startGame" style="display:none;">Egzersize Başla</button>
+  <button id="completeTraining" style="display:none;">Eğitimi Tamamla</button>
+  <button id="skipTraining" style="display:none;">Eğitimi Atla</button>
 </div>
-
-<div id="grid" class="grid">
-  <!-- Kelime bulmaca hücreleri burada oluşturulacak -->
-</div>
-
-<button id="startGame">Egzersize Başla</button>
-<button id="completeTraining">Eğitimi Tamamla</button>
-<button id="skipTraining">Eğitimi Atla</button>
 
 <script>
   const gridElement = document.getElementById('grid');
@@ -105,18 +136,41 @@
   const startGameButton = document.getElementById('startGame');
   const wordListElement = document.getElementById('wordList');
   const timerElement = document.getElementById('time');
-  const allWords = ['elma', 'armut', 'muz', 'kalem', 'kitap', 'masa', 'sandalye', 'bilgisayar', 'telefon', 'pencere', 'kapı', 'çiçek', 'ağaç', 'bulut', 'gökyüzü', "para", "araba", "musluk", "ithal", "kamera", "Antak", "Pasta", "Mesta", "Mustafa", "MASTAR"];
-  const wordsToFind = allWords.sort(() => 0.5 - Math.random()).slice(0, 2);
+  const difficultySelectionElement = document.getElementById('difficultySelection');
+  const allWords = ['Kasa', 'Şövalye', 'Partikül', 'Sadrazam', 'Uçak', 'Karavan', 'Parçalar', 'Ücretsiz', 'Kartel', 'Gemi', 'Korsan', 'Karton', 'Kutu', 'Karamel', 'Gökyüzü', "Kartezyen", "Konjüktör", "İnovasyon", "Parşömen", "Açıklık", "Aralık", "Pasta", "Pulcuk", "Ekran", "Mantar", "Kımız", "Yağmurluk", "Karanlık", "Şemsiye", "Baklava", "Tatlı", "Fıstık", "Yiyecek", "Karışık", "Yulaf", "Patlama", "Çerez", "Pazar", "Herkül", "Güçlü", "Zayıf", "Ağır", "Pantolon", "Hurdacı", "Altın", "Gümüş", "Pestil", "Pastırma", "Kuantum", "Fizik", "Biyoloji", "Kimya", "Matematik", "Paslı", "Çelik", "Demir", "Arka", "Ön", "Hazine", "Aşk", "Kaşık", "Çatal", "Bıçak", "Pinti", "Cimri", "Bencil", "Yardımsever", "İhtiyaç", "Kar", "Tava", "Kazan", "Makarna", "Askılık", "Sehpa", "Perde", "Şişe", "Defter", "Kapak", "Telefon", "Dizüstü", "Klima", "Vantilatör", "Hoparlör", "Şeftali", "Limon", "Kayısı", "Parametre", "Basınç", "Sıcaklık", "Hacim", "Uzaklık", "Volt", "İletken", "Tuzlu", "Şekerli", "Ekşimtrak"];
+  let wordsToFind = [];
+  let foundWords = [];
+  let selectedWords = [];
   let timeLeft = 30;
   let timer;
   let halfTime = false;
+  let difficulty = 0;
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function selectRandomWords(count) {
+    let tempWords = [...allWords]; // Orijinal diziyi bozmamak için kopyasını oluşturuyoruz
+    shuffleArray(tempWords);
+    return tempWords.slice(0, count);
+  }
 
   function initializeGame() {
     foundWords = [];
     timeLeft = 30;
     timerElement.textContent = timeLeft;
     completeTrainingButton.style.display = 'none';
+    skipTrainingButton.style.display = 'none';
     wordListElement.innerHTML = '';
+
+    selectedWords = selectRandomWords(difficulty);
+    wordsToFind = shuffleArray(selectedWords.slice(0, 2)); // İlk iki kelimeyi seç ve karıştır
+
     wordsToFind.forEach(word => {
       const wordElement = document.createElement('span');
       wordElement.textContent = word + ' ';
@@ -125,13 +179,12 @@
 
     // Gridi oluştur
     gridElement.innerHTML = '';
-    const cellElements = allWords.sort(() => 0.5 - Math.random()).map(word => {
+    shuffleArray(selectedWords).forEach(word => { // Tüm seçilmiş kelimeleri karıştır
       const cell = document.createElement('div');
       cell.textContent = word;
       cell.classList.add('cell');
       cell.onclick = () => checkWord(word, cell);
       gridElement.appendChild(cell);
-      return cell;
     });
   }
 
@@ -150,14 +203,14 @@
     if (timeLeft > 0) {
       timeLeft--;
       timerElement.textContent = timeLeft;
-      if (timeLeft === 0 && !halfTime) {
+      if (timeLeft === 15 && !halfTime) {
         removeRandomWords();
-        timeLeft = 15;
         halfTime = true;
       }
     } else if (halfTime && timeLeft === 0) {
-      timeLeft = 15;
-      removeRandomWords();
+      completeTrainingButton.style.display = 'block';
+      skipTrainingButton.style.display = 'none';
+      stopTimer();
     }
   }
 
@@ -166,23 +219,24 @@
   }
 
   function removeRandomWords() {
-    const wordsToRemove = allWords.filter(word => !wordsToFind.includes(word));
-    const randomWordsToRemove = wordsToRemove.sort(() => 0.5 - Math.random()).slice(0, 3); // Rastgele 3 kelime seç
+    const wordsToRemove = selectedWords.filter(word => !wordsToFind.includes(word));
+    const randomWordsToRemove = wordsToRemove.sort(() => 0.5 - Math.random()).slice(0, 3);
 
     const cellElements = Array.from(gridElement.children);
     cellElements.forEach(cell => {
       if (randomWordsToRemove.includes(cell.textContent)) {
-        cell.style.visibility = 'hidden'; // Kelimeyi gizle
+        cell.style.visibility = 'hidden';
       }
     });
   }
 
   function skipTraining() {
-    removeRandomWords(); // Kelimeleri hemen sil
-    clearInterval(timer); // Mevcut timer'ı durdur
-    halfTime = false; // Yarı süreye düşürme olayını sıfırla
-    timeLeft = 30; // Süreyi tekrar 30 saniye olarak ayarla
-    timer = setInterval(updateTimer, 1000); // Timer'ı yeniden başlat
+    removeRandomWords();
+    clearInterval(timer);
+    halfTime = false;
+    timeLeft = 15;
+    timer = setInterval(updateTimer, 1000);
+    skipTrainingButton.style.display = 'none';
   }
 
   function startGame() {
@@ -193,6 +247,12 @@
     timer = setInterval(updateTimer, 1000);
   }
 
+  function selectDifficulty(selectedDifficulty) {
+    difficulty = selectedDifficulty;
+    difficultySelectionElement.style.display = 'none';
+    startGameButton.style.display = 'block';
+  }
+
   skipTrainingButton.addEventListener('click', skipTraining);
 
   completeTrainingButton.addEventListener('click', () => {
@@ -200,6 +260,13 @@
   });
 
   startGameButton.addEventListener('click', startGame);
+
+  // Zorluk seçimi için event listener'ları ekle
+  document.querySelectorAll('.difficulty-button').forEach(button => {
+    button.addEventListener('click', (e) => {
+      selectDifficulty(parseInt(e.target.getAttribute('data-difficulty')));
+    });
+  });
 
 </script>
 
